@@ -30,5 +30,7 @@ public class UpdateApiModel extends Cmd {
 		MicroApiSdk.deletePlainEntityJavaSourceFiles(srcFolder, apiServerDefinition);
 		MicroApiSdk.updatePlainEntityJavaSourceFiles(srcFolder, apiServerDefinition);
 		MicroApiSdk.updateErrorCodeJavaFile(srcFolder, apiServerDefinition);
+		MicroApiSdk.deleteUnusedApiJavaSourceFiles(srcFolder, apiServerDefinition);
+		MicroApiSdk.updateApiJavaSourceFiles(srcFolder, apiServerDefinition);
 	}
 }
