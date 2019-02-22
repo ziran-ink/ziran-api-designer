@@ -24,6 +24,9 @@ public class UpdateApiModel extends Cmd {
 			srcFolder = "src/main/java";
 		}
 		ApiServerDefinition apiServerDefinition = MicroApiSdk.buildApiServerDefinition(apiServerConfigFilePath);
+		if (StringUtils.isBlank(apiServerDefinition.getJavaPackageName())) {
+			throw new RuntimeException("javaPackageName不能为空");
+		}
 		MicroApiSdk.deletePlainEntityJavaSourceFiles(srcFolder, apiServerDefinition);
 		MicroApiSdk.updatePlainEntityJavaSourceFiles(srcFolder, apiServerDefinition);
 		MicroApiSdk.updateErrorCodeJavaFile(srcFolder, apiServerDefinition);
