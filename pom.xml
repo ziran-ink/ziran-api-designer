@@ -6,7 +6,7 @@
 
 	<groupId>com.github.ziran-ink</groupId>
 	<artifactId>ziran-api-designer</artifactId>
-	<version>1.0.1</version>
+	<version>1.0.2</version>
 	<packaging>jar</packaging>
 
 	<name>ziran-api-designer</name>
@@ -145,6 +145,11 @@
 	</build>
 
 	<dependencies>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.2.3</version>
+		</dependency>
 		<dependency>
 			<groupId>org.freemarker</groupId>
 			<artifactId>freemarker</artifactId>
