@@ -30,13 +30,13 @@ class Scratch3ZiranBlocks {
                             type: ArgumentType.STRING
                         }
                     },
-                    blockIconURI: webApiIconUri
+                    blockIconURI: <#if apiDefinition.ext?? && apiDefinition.ext.icon??>'${apiDefinition.ext.icon}'<#else>webApiIconUri</#if>
                 },
                 {
                     opcode: 'isSendRequestSuccess__${apiDefinition.name?replace(".", "__")}',
                     text: '发送【${apiDefinition.comment}】请求成功？',
                     blockType: BlockType.BOOLEAN,
-                    blockIconURI: webApiIconUri
+                    blockIconURI: <#if apiDefinition.ext?? && apiDefinition.ext.icon??>'${apiDefinition.ext.icon}'<#else>webApiIconUri</#if>
                 },
                 {
                     opcode: 'getResponseValue__${apiDefinition.name?replace(".", "__")}',
@@ -49,7 +49,7 @@ class Scratch3ZiranBlocks {
                             defaultValue: '_all'
                         }
                     },
-                    blockIconURI: webApiIconUri
+                    blockIconURI: <#if apiDefinition.ext?? && apiDefinition.ext.icon??>'${apiDefinition.ext.icon}'<#else>webApiIconUri</#if>
                 },
                 '---',
                 </#list>
