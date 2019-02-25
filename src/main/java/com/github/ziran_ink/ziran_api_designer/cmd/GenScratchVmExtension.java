@@ -70,7 +70,7 @@ public class GenScratchVmExtension extends Cmd {
 		List<NestedFieldDefinition> commonFieldDefinitions = new ArrayList<>();
 //		commonFieldDefinitions.add(_buildFieldDefinition("错误码(0正常,非0错误)", "code", "Integer", true,
 //				MicroApiReserveResponseCodeEnum.success.getCode()));
-		commonFieldDefinitions.add(_buildFieldDefinition("提示信息", "msg", "String", true,
+		commonFieldDefinitions.add(_buildFieldDefinition("错误提示", "message", "String", true,
 				MicroApiReserveResponseCodeEnum.success.getMessage()));
 		if (apiDefinition.getResponseDefinition() == null) {
 			NestedEntityDefinition responseDefinition = new NestedEntityDefinition();

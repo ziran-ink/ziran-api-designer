@@ -21,21 +21,23 @@ class Scratch3ZiranBlocks {
             blockIconURI: iconURI,
             blocks: [
                 <#list apiDefinitions as apiDefinition>
-                {
-                    opcode: 'setRequestParam__${apiDefinition.name?replace(".", "__")}',
-                    text: formatMessage('设置【${apiDefinition.comment}】的请求参数[PARAM_NAME]值为[PARAM_VALUE]'),
-                    blockType: BlockType.COMMAND,
-                    arguments: {
-                        PARAM_NAME: {
-                            type: ArgumentType.STRING,
-                            menu: 'requestParamNames__${apiDefinition.name?replace(".", "__")}'
+                    <#if apiDefinition.requestDefinition?? && apiDefinition.requestDefinition.fieldDefinitions??>
+                    {
+                        opcode: 'setRequestParam__${apiDefinition.name?replace(".", "__")}',
+                        text: formatMessage('设置【${apiDefinition.comment}】的请求参数[PARAM_NAME]值为[PARAM_VALUE]'),
+                        blockType: BlockType.COMMAND,
+                        arguments: {
+                            PARAM_NAME: {
+                                type: ArgumentType.STRING,
+                                menu: 'requestParamNames__${apiDefinition.name?replace(".", "__")}'
+                            },
+                            PARAM_VALUE: {
+                                type: ArgumentType.STRING
+                            }
                         },
-                        PARAM_VALUE: {
-                            type: ArgumentType.STRING
-                        }
+                        blockIconURI: <#if apiDefinition.ext?? && apiDefinition.ext.icon??>'${apiDefinition.ext.icon}'<#else>webApiIconUri</#if>
                     },
-                    blockIconURI: <#if apiDefinition.ext?? && apiDefinition.ext.icon??>'${apiDefinition.ext.icon}'<#else>webApiIconUri</#if>
-                },
+                    </#if>
                 {
                     opcode: 'isSendRequestSuccess__${apiDefinition.name?replace(".", "__")}',
                     text: '发送【${apiDefinition.comment}】请求成功？',
@@ -60,7 +62,7 @@ class Scratch3ZiranBlocks {
             ],
             menus: {
                 <#list apiDefinitions as apiDefinition>
-                    <#if apiDefinition.requestDefinition??>
+                    <#if apiDefinition.requestDefinition?? && apiDefinition.requestDefinition.fieldDefinitions??>
                         'requestParamNames__${apiDefinition.name?replace(".", "__")}': [
                             <#list apiDefinition.requestDefinition.fieldDefinitions as fieldDefinition>
                             {text: "${fieldDefinition.comment?replace("\"", "\\\"")}", value: "${fieldDefinition.name}"},
@@ -89,17 +91,30 @@ class Scratch3ZiranBlocks {
             return;
         }
         if (!util.thread._x_request__${apiDefinition.name?replace(".", "__")}) {
-            util.thread._x_request__${apiDefinition.name?replace(".", "__")} = {};
+            util.thread._x_request__${apiDefinition.name?replace(".", "__")} = {
+                apiName: "${apiDefinition.name}"
+            };
         }
         util.thread._x_request__${apiDefinition.name?replace(".", "__")}[args.PARAM_NAME] = args.PARAM_VALUE;
     }
 
     isSendRequestSuccess__${apiDefinition.name?replace(".", "__")} (args, util) {
         return new Promise(resolve => {
+            if (!util.thread._x_request__${apiDefinition.name?replace(".", "__")}) {
+                util.thread._x_request__${apiDefinition.name?replace(".", "__")} = {
+                    apiName: "${apiDefinition.name}"
+                };
+            }
+            var request = util.thread._x_request__${apiDefinition.name?replace(".", "__")};
             nets({
+                body: JSON.stringify(request),
                 url: 'https://${serverAddressDefinition.host}:${serverAddressDefinition.port?c}${serverAddressDefinition.url}',
-                timeout: serverTimeoutMs
-            }, (err, res, body) => {
+                timeout: serverTimeoutMs,
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }, (err, resp, body) => {
                 if (err) {
                     resolve({code:12, message:"无法连接服务器"});
                 } else {
